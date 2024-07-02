@@ -18,13 +18,17 @@ dotenv.config();
 
 const app = express();
 
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: process.env.API_URI,
+  origin: process.env.API_URI || 'http://localhost:3000',
   credentials: true,
-}));
+}
+  
+));
 
+// implementing api for paypal
 app.get('/api/keys/paypal', (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID || 'sandbox');
 });
@@ -41,6 +45,7 @@ mongoose
   });
 
 app.use('/api/upload', uploadRouter);
+// returns list of products for this api
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);
 app.use('/api/orders', orderRouter);
@@ -57,7 +62,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: process.env.API_URI,
-    methods: ['GET', 'POST'],
+    methods: ["GET", "POST"],
   },
 });
 
@@ -109,7 +114,7 @@ io.on('connection', (socket) => {
         return;
       }
 
-      auction.bids.push({ bidder, bidAmount });
+      auction.bids.push({ bidder: 'Anonymous', bidAmount: bidAmount });
       auction.currentBid = bidAmount;
 
       const updatedAuction = await auction.save();
@@ -124,6 +129,6 @@ io.on('connection', (socket) => {
 
 server.listen(port, () => {
   console.log(`Server at port: ${port}`);
-});
+}); // server starts listining to requests
 
 export { server, io };
