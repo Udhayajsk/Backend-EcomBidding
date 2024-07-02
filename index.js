@@ -21,7 +21,11 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+  origin:process.env.API_URI,
+  credentials: true,
+
+}));
 
 // implementing api for paypal
 app.get('/api/keys/paypal', (req, res) => {
