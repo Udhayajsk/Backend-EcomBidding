@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Updated CORS configuration
 const corsOptions = {
-  origin: 'http://localhost:3000', // Allow requests from frontend
+  origin: process.env.API_URI, // Allow requests from frontend
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -47,7 +47,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: process.env.API_URI,
     methods: ['GET', 'POST'],
   },
 });
